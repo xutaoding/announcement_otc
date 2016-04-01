@@ -147,7 +147,7 @@ class FileFiledInfo(BaseDownload):
             raise TypeError('ext: <{0}> is not pdf, Please handle it'.format(self.__file_ext))
 
         # Upload aws S3
-        # self.aws.put(self.aws_key + self.abs_filename, self._storage_path)
+        self.aws.put(self.aws_key + self.abs_filename, self._storage_path)
 
     @staticmethod
     def remove_files():

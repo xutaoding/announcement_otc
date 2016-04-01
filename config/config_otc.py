@@ -1,4 +1,3 @@
-import sys
 from os.path import join, abspath, dirname
 
 refer_uri = 'http://www.neeq.com.cn/announcement'
