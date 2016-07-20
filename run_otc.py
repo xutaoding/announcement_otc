@@ -1,7 +1,9 @@
+# -*- coding: utf-8 -*-
 import re
+import sys
+from datetime import timedelta, date
 
-from announcement_otc.announcement import OtcAnnouncement
-from config.config_otc import ANNOC_TYPE_ONE_DATE, ANNOC_TYPE_TWO_DATE
+from annou_otc.annou import OtcAnnouncement
 
 
 def validation(is_valid_date):
@@ -11,21 +13,48 @@ def validation(is_valid_date):
         raise ValueError("Date format Error, {} isn't excepted `0000-00-00` format".format(is_valid_date))
 
 
-def run_otc_one_update():
-    """ base type is 1 announcement for special date """
-    for otc_one_date in ANNOC_TYPE_ONE_DATE:
-        validation(otc_one_date)
-        OtcAnnouncement(1, otc_one_date, otc_one_date).extract()
+def get_date_range(start, end=None):
+    """
+    calculate date range
+    :param start: string, yyyy-mm-dd, start date
+    :param end: string, yyyy-mm-dd, end date
+    :return: list, date string range list
+    """
+    date_range = []
+    start = start.replace('-', '')
+    end = end.replace('-', '') if end else start
+    split_ymd = (lambda _d: (int(_d[:4]), int(_d[4:6]), int(_d[6:8])))
+    date_start = date(*split_ymd(start))
+    date_end = date(*split_ymd(end))
+
+    while date_start <= date_end:
+        date_range.append(str(date_start))
+        date_start = timedelta(days=1) + date_start
+    return date_range
 
 
-def run_otc_two_update():
-    """ base type is 2 announcement for special date """
-    for otc_two_date in ANNOC_TYPE_TWO_DATE:
-        validation(otc_two_date)
-        OtcAnnouncement(2, otc_two_date, otc_two_date).extract()
+def annou_otc_update(typ, start, end):
+    """
+    新三板或老三板补抓
+    :param typ: 公告类型，0是老三板，1是新三板
+    :param start: 公告抓取开始时间
+    :param end: 公告抓取结束时间
+    :return:
+    """
+    validation(start)
+    validation(end)
+
+    annou_typ = typ
+    start_dt, end_dt = get_date_range(start, end)
+    OtcAnnouncement(annou_typ, start_dt, end_dt).extract()
 
 
 if __name__ == '__main__':
-    OtcAnnouncement(1).extract()
-    # run_otc_one_update()
-    # run_otc_two_update()
+    # 为防止漏抓，增加日期
+    ANNOC_DATE = {
+        'typ': 1,
+        'start': '2016-01-25',
+        'end': '2016-01-25',
+    }
+
+    annou_otc_update(**ANNOC_DATE)
