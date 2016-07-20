@@ -13,6 +13,8 @@ from config.config_otc import ROOT_AWS_KEY
 from config.config_otc import ROOT_PATH, PORT
 from config.config_otc import DB_RULE, RULE_HOST, TABLE_RULE
 
+typ_coll = Mongodb(RULE_HOST, PORT, DB_RULE, TABLE_RULE)
+
 
 class FileFiledInfo(BaseDownload):
     def __init__(self, title, file_url, file_ext):
@@ -114,7 +116,6 @@ class FileFiledInfo(BaseDownload):
 
 class TypFieldIdentification(FileFiledInfo):
     def __init__(self, title, file_url, file_ext):
-        self.__coll = Mongodb(RULE_HOST, PORT, DB_RULE, TABLE_RULE)
         super(TypFieldIdentification, self).__init__(title, file_url, file_ext)
 
     def __get_typ_filed(self, rule_type):
@@ -124,7 +125,7 @@ class TypFieldIdentification(FileFiledInfo):
         fields = {'rule': 1, 'code': 1}
 
         count = 0
-        for rule_dict in self.__coll.query(query, fields).sort([sorted_fields]):
+        for rule_dict in typ_coll.query(query, fields).sort([sorted_fields]):
             count += 1
             rule = rule_dict['rule']
             pattern = rule.replace('_', '.*?')
@@ -141,8 +142,11 @@ class TypFieldIdentification(FileFiledInfo):
 
         if typ_field_value is None:
             typ_field_value = self.__get_typ_filed(2)
-        self.__coll.disconnect()
         return typ_field_value if typ_field_value else None
+
+    @staticmethod
+    def close():
+        typ_coll.disconnect()
 
 
 class CatFiledIdentification(FileFiledInfo):
