@@ -99,10 +99,10 @@ class OtcAnnouncement(BaseDownload):
             # 必须先过滤， 后下载文件和计算
             url_md5 = md5(file_path)
             if url_md5 not in self.seen:
-                self._seen.add(url_md5)
                 data = DataPopulation(code, file_path, pub, title, file_ext, pdt).populate_data()
 
                 if data:
+                    self._seen.add(url_md5)
                     current_id = self._coll.insert(data)
 
                     # 在上海环境跑程序， 不用建立索引
