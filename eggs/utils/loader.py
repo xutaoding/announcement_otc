@@ -19,7 +19,7 @@ class BaseDownload(object):
                 return self.to_utf8(feed_data)
             except Exception as e:
                 print 'Web open error', i, 'times:', e
-                time.sleep(40.0)
+                time.sleep(5)
         return 'None'
 
     @staticmethod
