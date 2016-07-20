@@ -12,6 +12,8 @@ from config.config_otc import PORT
 from config.config_otc import STOCK_DB, STOCK_HOST, STOCK_TABLE
 from annou_parser import TypFieldIdentification, CatFiledIdentification
 
+coll_stock = Mongodb(STOCK_HOST, PORT, STOCK_DB, STOCK_TABLE)
+
 
 def error_info():
     exc_type, exc_obj, tb = sys.exc_info()
@@ -29,7 +31,6 @@ class DataPopulation(TypFieldIdentification, CatFiledIdentification):
         self.__pub = pub
         self.__pdt = pdt
         self.__src = file_path
-        self.__coll_stock = Mongodb(STOCK_HOST, PORT, STOCK_DB, STOCK_TABLE)
         super(DataPopulation, self).__init__(title, file_path, file_ext)
 
     @property
@@ -44,7 +45,7 @@ class DataPopulation(TypFieldIdentification, CatFiledIdentification):
         secu = [{'cd': code, 'mkt': '', 'org': ''}]
 
         try:
-            stock_dict = self.__coll_stock.get(query, fields)
+            stock_dict = coll_stock.get(query, fields)
             secu[0]['cd'] = stock_dict['code']
             secu[0]['mkt'] = stock_dict['mkt']['code']
             secu[0]['org'] = stock_dict['org']['id']
@@ -78,7 +79,8 @@ class DataPopulation(TypFieldIdentification, CatFiledIdentification):
         others = {
             'title': self.file_title, 'pid': self.other_pid, 'upt': datetime.now(), 'crt': datetime.now(),
             'src': self.other_src, 'sid': self.other_sid, 'pdt': self.pdt, 'secu': self.other_secu(self.__code),
-            'cru': '000000', 'upu': '000000',  'valid': '1', 'stat': 2, 'effect': None, 'check': None, 'audit': None,
+            'cru': '000000', 'upu': '000000',  'valid': '1', 'stat': 2, 'effect': None, 'check': False, 'audit': False,
+            'pub': self.other_pub
         }
         return others
 
@@ -94,6 +96,10 @@ class DataPopulation(TypFieldIdentification, CatFiledIdentification):
             error_info()
             print('Data Error: [{0}]'.format(e))
 
-        self.__coll_stock.disconnect()
         return {}
+
+    @staticmethod
+    def close():
+        coll_stock.disconnect()
+        TypFieldIdentification.close()
 
