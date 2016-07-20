@@ -18,7 +18,7 @@ class BaseDownload(object):
                     return feed_data
                 return self.to_utf8(feed_data)
             except Exception as e:
-                print 'Web open error', i, 'times:', e
+                print 'Web open error', i, 'times:', e, '\n\t', url, data
                 time.sleep(5)
         return 'None'
 
