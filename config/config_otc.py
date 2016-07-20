@@ -18,16 +18,18 @@ CRT_INDEX = "http://192.168.250.205:17081/indexer/services/indexes/delta.json?in
 
 PORT = 27017
 DB_OTC = 'news'
-# DATA_HOST = '192.168.250.208'
-DATA_HOST = '192.168.100.20'
+DATA_HOST = '192.168.251.95'        # 上海环境mong95 <122.144.134.95>
+# DATA_HOST = '192.168.100.20'      # 测试环境mongo
 TABLE_OTC = 'announcement_otc'
 
 DB_RULE = 'ada'
-RULE_HOST = '192.168.250.200'
+# RULE_HOST = '192.168.250.200'       # 测试环境mongo
+RULE_HOST = '192.168.251.95'         # 上海环境mong95 <122.144.134.95>
 TABLE_RULE = 'dict_announce_rule'
 
 STOCK_DB = 'ada'
-STOCK_HOST = '192.168.250.200'
+# STOCK_HOST = '192.168.250.200'          # 测试环境mongo
+STOCK_HOST = '192.168.251.95'            # 上海环境mong95 <122.144.134.95>
 STOCK_TABLE = 'base_stock'
 
 ROOT_PATH = join(dirname(dirname(abspath(__file__))), 'files').replace('\\', '/') + '/'
