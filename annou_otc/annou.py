@@ -115,8 +115,10 @@ class OtcAnnouncement(BaseDownload):
             self.process(self.crawl_info(page))
         self._coll.disconnect()
 
+        DataPopulation.close()
+
 
 if __name__ == '__main__':
     dt = '2016-07-19'
-    OtcAnnouncement(typ=0, start_date=dt, end_date=dt).extract()
+    OtcAnnouncement(typ=1, start_date=dt, end_date=dt).extract()
 
