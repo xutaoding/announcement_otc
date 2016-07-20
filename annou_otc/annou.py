@@ -104,7 +104,9 @@ class OtcAnnouncement(BaseDownload):
 
                 if data:
                     current_id = self._coll.insert(data)
-                    self.create_index(current_id)
+
+                    # 在上海环境跑程序， 不用建立索引
+                    # self.create_index(current_id)
                     message = 'typ: {0} k: {1} mongo id: {6}, code: {5} pub: {3} title: {2} \n\tfile_url: {4}\n'
                     print(message.format(self.annou_typ[self._typ], k + 1, title, pub, file_path, code, current_id))
 
