@@ -33,7 +33,7 @@ def get_date_range(start, end=None):
     return date_range
 
 
-def annou_otc_update(typ, start, end):
+def annou_otc_update(start, end):
     """
     新三板或老三板补抓
     :param typ: 公告类型，0是老三板，1是新三板
@@ -44,17 +44,17 @@ def annou_otc_update(typ, start, end):
     validation(start)
     validation(end)
 
-    annou_typ = typ
-    start_dt, end_dt = get_date_range(start, end)
-    OtcAnnouncement(annou_typ, start_dt, end_dt).extract()
+    date_range = get_date_range(start, end)
+    start_dt, end_dt = date_range[0], date_range[-1]
+    OtcAnnouncement(1, start_dt, end_dt).extract()
+    OtcAnnouncement(0, start_dt, end_dt).extract()
 
 
 if __name__ == '__main__':
     # 为防止漏抓，增加日期
     ANNOC_DATE = {
-        'typ': 1,
-        'start': '2016-01-25',
-        'end': '2016-01-25',
+        'start': '2016-04-01',
+        'end': '2016-07-19',
     }
 
     annou_otc_update(**ANNOC_DATE)
