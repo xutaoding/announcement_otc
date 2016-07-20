@@ -105,7 +105,7 @@ class FileFiledInfo(BaseDownload):
 
         data = {
             'fn': self.filename, 'ext': self.file_ext, 'bytes': self.file_size,
-            'pn': self.file_pages, 'md5': self.file_md5_value, 'url': self.file_url, 'src': self.file_src
+            'pn': self.file_pages, 'md5': self.file_md5_value, 'url': self.file_url
         }
 
         self.remove_files()
