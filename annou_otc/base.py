@@ -35,9 +35,7 @@ class DataPopulation(TypFieldIdentification, CatFiledIdentification):
 
     @property
     def pdt(self):
-        # from datetime import datetime
-        return datetime.fromtimestamp(self.__pdt / 1000)
-        # return time.strftime('%Y-%m-%s %H:%M:%S', time.localtime(self.__pdt / 1000))
+        return datetime.strptime(self.__pub, '%Y-%m-%d')
 
     def other_secu(self, code):
         query = {'tick': code}
