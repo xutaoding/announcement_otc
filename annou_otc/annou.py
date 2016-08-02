@@ -58,7 +58,7 @@ class OtcAnnouncement(BaseDownload):
 
     @property
     def seen(self):
-        key = 'file'
+        key = 'sid'
         fields = {key: 1}
         query = {
             'pdt':
@@ -69,7 +69,7 @@ class OtcAnnouncement(BaseDownload):
             'sid': re.compile(r'http')
         }
 
-        return {docs['file']['fn'] for docs in self._coll.query(query, fields)}
+        return {md5(docs['sid']) for docs in self._coll.query(query, fields)}
 
     def crawl_info(self, page=0):
         result_infos = []
