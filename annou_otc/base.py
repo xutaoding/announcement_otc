@@ -37,7 +37,8 @@ class DataPopulation(TypFieldIdentification, CatFiledIdentification):
     def pdt(self):
         return datetime.strptime(self.__pub, '%Y-%m-%d')
 
-    def other_secu(self, code):
+    @classmethod
+    def other_secu(cls, code):
         query = {'tick': code}
         fields = {'code': 1, 'org.id': 1, 'mkt.code': 1}
         secu = [{'cd': code, 'mkt': '', 'org': ''}]
