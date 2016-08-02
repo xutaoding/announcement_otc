@@ -131,6 +131,6 @@ class OtcAnnouncement(BaseDownload):
 
 
 if __name__ == '__main__':
-    dt = '2016-07-19'
+    dt = '2016-04-14'
     OtcAnnouncement(typ=1, start_date=dt, end_date=dt).extract()
 

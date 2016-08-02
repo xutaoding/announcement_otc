@@ -54,7 +54,7 @@ class DataPopulation(TypFieldIdentification, CatFiledIdentification):
 
     @property
     def other_pub(self):
-        return datetime.strptime(self.__pub, '%Y-%m-%d')
+        return self.__pub
 
     @property
     def other_src(self):
