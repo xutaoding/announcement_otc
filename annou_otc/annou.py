@@ -69,7 +69,7 @@ class OtcAnnouncement(BaseDownload):
             'sid': re.compile(r'http')
         }
 
-        return {docs['file']['md5'] for docs in self._coll.query(query, fields)}
+        return {docs['file']['fn'] for docs in self._coll.query(query, fields)}
 
     def crawl_info(self, page=0):
         result_infos = []
