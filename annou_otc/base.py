@@ -78,9 +78,14 @@ class DataPopulation(TypFieldIdentification, CatFiledIdentification):
         others = {
             'title': self.file_title, 'pid': self.other_pid, 'upt': datetime.now(), 'crt': datetime.now(),
             'src': self.other_src, 'sid': self.other_sid, 'pdt': self.pdt, 'secu': self.other_secu(self.__code),
-            'cru': '000000', 'upu': '000000',  'valid': '1', 'stat': 2, 'effect': None, 'check': False, 'audit': False,
+            'cru': '000000', 'upu': '000000',  'valid': '1', 'effect': None, 'check': False, 'audit': False,
             'pub': self.other_pub
         }
+
+        if others['secu']['cd'].endswith('_QS_EQ'):
+            others['stat'] = 2
+        else:
+            others['stat'] = 1
         return others
 
     def populate_data(self):
