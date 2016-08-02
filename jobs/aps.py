@@ -6,7 +6,7 @@ from datetime import datetime
 
 from pymongo import MongoClient
 
-sys.path.append(dirname(abspath(__file__)))
+sys.path.append(dirname(dirname(abspath(__file__))))
 
 from jobs import app
 from config import config_otc as _conf
