@@ -1,49 +1,46 @@
 # -*- coding: utf-8 -*-
-import os
+import re
 import sys
 from os.path import dirname, abspath
+from datetime import datetime
 
-from apscheduler.jobstores.sqlalchemy import SQLAlchemyJobStore
-from apscheduler.schedulers.blocking import BlockingScheduler
-from apscheduler.executors.pool import ProcessPoolExecutor
+from pymongo import MongoClient
 
 sys.path.append(dirname(abspath(__file__)))
 
+from jobs import app
+from config import config_otc as _conf
 from annou_otc.annou import OtcAnnouncement
-
-
-def create_sqlite():
-    sqlite_path = dirname(abspath(__file__))
-    for sql_path in os.listdir(sqlite_path):
-        if sql_path.endswith('.db'):
-            os.remove(os.path.join(sqlite_path, sql_path))
-
-create_sqlite()
-
-
-jobstores = {
-    'default': SQLAlchemyJobStore(url='sqlite:///jobs.db')
-}
-
-# using ThreadPoolExecutor as default other than ProcessPoolExecutor(not work) to executors
-executors = {
-    # 'default': ThreadPoolExecutor(4),
-    'default': ProcessPoolExecutor(4),
-}
-
-job_defaults = {
-    'coalesce': False,
-    'max_instances': 1
-}
+from annou_otc.base import DataPopulation
 
 
 def annou_jobs():
     OtcAnnouncement(1).extract()
     OtcAnnouncement(0).extract()
 
-app = BlockingScheduler(jobstores=jobstores, executors=executors, job_defaults=job_defaults)
 
-app.add_job(annou_jobs, trigger='cron', hour='9-23', minute='*/15')
+def update_secu_fields():
+    db = MongoClient(_conf.DATA_HOST, _conf.PORT)
+    collection = db[_conf.DB_OTC][_conf.TABLE_OTC]
+
+    fields = {'secu': 1}
+    query = {'sid': re.compile(r'http')}
+
+    for docs in collection.find(query, fields):
+        old_code = docs['secu']['cd'].strip()
+
+        if not old_code.endswith('_QS_EQ'):
+            new_secu = DataPopulation.other_secu(old_code)
+
+            if new_secu['cd'].endswith('_QS_EQ'):
+                collection.update(
+                    spec={'_id': docs['_id']},
+                    document={'$set': {'stat': 2, 'upt': datetime.now(), 'secu': new_secu}}
+                )
+    db.close()
+
+app.add_job(annou_jobs, trigger='cron', hour='9-23', minute='*/20')
+app.add_job(update_secu_fields, trigger='cron', hour='9-18', minute='*/30')
 app.start()
 
 
