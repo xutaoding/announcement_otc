@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+import re
 import urllib
-from datetime import date
+from datetime import date, datetime
 
 import simplejson
 
@@ -20,8 +21,8 @@ class OtcAnnouncement(BaseDownload):
         """
         该类主要抓取 http://www.neeq.com.cn/disclosure/announcement.html 网站上，老三板和新三板的公司公告
         :param typ: 三板公告类型， 0是老三板， 1是新三板
-        :param start_date: 抓取的起始时间
-        :param end_date: 抓取的结束时间
+        :param start_date: 抓取的起始时间, 0000-00-00
+        :param end_date: 抓取的结束时间, 0000-00-00
         """
         assert int(typ) in [0, 1]
         self._typ = int(typ)
@@ -57,9 +58,18 @@ class OtcAnnouncement(BaseDownload):
 
     @property
     def seen(self):
-        key = 'sid'
+        key = 'file'
         fields = {key: 1}
-        return {md5(docs.get(key, '')) for docs in self._coll.query({}, fields)}
+        query = {
+            'pdt':
+                {
+                    '$gte': datetime.strptime(self._start_date, '%Y-%m-%d'),
+                    '$lte': datetime.strptime(self._end_date, '%Y-%m-%d')
+                },
+            'sid': re.compile(r'http')
+        }
+
+        return {docs['file']['md5'] for docs in self._coll.query(query, fields)}
 
     def crawl_info(self, page=0):
         result_infos = []
