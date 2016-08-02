@@ -35,9 +35,14 @@ class FileFiledInfo(BaseDownload):
         if self.__file_ext != 'pdf':
             return 1
 
-        with open(self._storage_path, 'rb') as fp:
-            pdf = pyPdf.PdfFileReader(fp)
-            return pdf.getNumPages()
+        try:
+            with open(self._storage_path, 'rb') as fp:
+                pdf = pyPdf.PdfFileReader(fp)
+                return pdf.getNumPages()
+        except Exception:
+            pass
+        return 1
+
 
     @property
     def file_title(self):
