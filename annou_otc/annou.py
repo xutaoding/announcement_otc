@@ -17,15 +17,18 @@ from eggs.utils.loader import BaseDownload
 class OtcAnnouncement(BaseDownload):
     annou_typ = {1: '新三板', 0: '老三板'}
 
-    def __init__(self, typ=1, start_date=None, end_date=None):
+    def __init__(self, typ=1, start_date=None, end_date=None, code=''):
         """
         该类主要抓取 http://www.neeq.com.cn/disclosure/announcement.html 网站上，老三板和新三板的公司公告
+
         :param typ: 三板公告类型， 0是老三板， 1是新三板
         :param start_date: 抓取的起始时间, 0000-00-00
         :param end_date: 抓取的结束时间, 0000-00-00
+        :code: string: 格式位000000或空
         """
         assert int(typ) in [0, 1]
         self._typ = int(typ)
+        self._code = code
 
         if (start_date and not end_date) or (not start_date and end_date):
             raise ValueError('Arguments error.')
@@ -37,15 +40,22 @@ class OtcAnnouncement(BaseDownload):
             self._end_date = end_date
 
         self._base_url = URI
-        self._form_data = FORM_DATA.copy()
-        self._form_data['isNewThree'] = self._typ
-        self._form_data['startTime'] = self._start_date
-        self._form_data['endTime'] = self._end_date
+        self._form_data = self.form_data
 
         self._switch = False
         self._total_pages = 1
         self._coll = Mongodb(DATA_HOST, PORT, DB_OTC, TABLE_OTC)
         self._seen = self.seen
+
+    @property
+    def form_data(self):
+        _form_data = FORM_DATA.copy()
+
+        _form_data['isNewThree'] = self._typ
+        _form_data['startTime'] = self._start_date
+        _form_data['endTime'] = self._end_date
+        _form_data['companyCd'] = self._code
+        return _form_data
 
     def create_index(self, unique_id=None):
         if unique_id is not None:
@@ -68,6 +78,9 @@ class OtcAnnouncement(BaseDownload):
                 },
             'sid': re.compile(r'http')
         }
+
+        if self._code:
+            query['secu.cd'] = re.compile(r'%s' % self._code)
 
         return {md5(docs['sid']) for docs in self._coll.query(query, fields)}
 
