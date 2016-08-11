@@ -86,7 +86,7 @@ class DataPopulation(TypFieldIdentification, CatFiledIdentification):
             'pub': self.other_pub
         }
 
-        if others['secu'][0]['cd'].endswith('_QS_EQ'):
+        if others['secu'][0]['org']:
             others['stat'] = 2
         else:
             others['stat'] = 1

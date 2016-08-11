@@ -27,7 +27,7 @@ def update_secu_fields():
     query = {'sid': re.compile(r'http')}
 
     for docs in collection.find(query, fields):
-        code = docs['secu']['org'][:6]
+        code = docs['secu']['cd'][:6]
         old_org = docs['secu']['org'].strip()
 
         if not old_org:
