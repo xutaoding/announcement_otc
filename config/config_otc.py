@@ -19,8 +19,8 @@ CRT_INDEX = "http://192.168.250.205:17081/indexer/services/indexes/delta.json?in
 PORT = 27017
 DB_OTC = 'news'
 # DATA_HOST = '192.168.100.20'      # 测试环境mongo
-# DATA_HOST = '192.168.251.95'        # 上海环境mong95 <122.144.134.95>
-DATA_HOST = '122.144.134.95'        # 上海环境mong95 外网
+DATA_HOST = '192.168.251.95'        # 上海环境mong95 <122.144.134.95>
+# DATA_HOST = '122.144.134.95'        # 上海环境mong95 外网
 TABLE_OTC = 'announcement_otc'
 
 DB_RULE = 'ada'
