@@ -113,11 +113,11 @@ class Bucket(Base):
 if __name__ == '__main__':
     import os
 
-    s3_key = 'data/news/csf_news/20160810/'
-    local_path = 'D:/temp/csf_news/20160810_tech_qq/'
+    s3_key = 'data/news/csf_news/20160811/'
+    local_path = 'D:/temp/csf_news/csf_news/'
     b = Bucket()
 
-    for fn in os.listdir(local_path):
-        print fn
+    for index, fn in enumerate(os.listdir(local_path), 1):
+        print fn, index
         b.put(s3_key + fn, local_path + fn)
 
