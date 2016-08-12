@@ -27,13 +27,14 @@ def update_secu_fields():
     query = {'sid': re.compile(r'http')}
 
     for docs in collection.find(query, fields):
-        code = docs['secu']['cd'][:6]
-        old_org = docs['secu']['org'].strip()
+        old_secu = docs['secu'][0]
+        code = old_secu['cd'][:6]
+        old_org = old_secu['org'].strip()
 
         if not old_org:
             new_secu = DataPopulation.other_secu(code)
 
-            if new_secu['cd']['org']:
+            if new_secu[0]['org']:
                 collection.update(
                     spec={'_id': docs['_id']},
                     document={'$set': {'stat': 2, 'upt': datetime.now(), 'secu': new_secu}}
