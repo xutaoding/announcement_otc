@@ -109,3 +109,15 @@ class Bucket(Base):
     def close(self):
         return self.conn.close()
 
+
+if __name__ == '__main__':
+    import os
+
+    s3_key = 'data/news/csf_news/20160811/'
+    local_path = 'D:/temp/csf_news/csf_news/'
+    b = Bucket()
+
+    for index, fn in enumerate(os.listdir(local_path), 1):
+        print fn, index
+        b.put(s3_key + fn, local_path + fn)
+

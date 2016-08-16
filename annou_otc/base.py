@@ -41,11 +41,15 @@ class DataPopulation(TypFieldIdentification, CatFiledIdentification):
     def other_secu(cls, code):
         query = {'tick': code}
         fields = {'code': 1, 'org.id': 1, 'mkt.code': 1}
-        secu = [{'cd': code, 'mkt': '', 'org': ''}]
+
+        if code == '000000':
+            raise ValueError('Code: <%s> 券商' % code)
+
+        # secu限定如果不是券商公告(code：000000)的全部加 _QS_EQ
+        secu = [{'cd': code + '_QS_EQ', 'mkt': '', 'org': ''}]
 
         try:
             stock_dict = coll_stock.get(query, fields)
-            secu[0]['cd'] = stock_dict['code']
             secu[0]['mkt'] = stock_dict['mkt']['code']
             secu[0]['org'] = stock_dict['org']['id']
         except (KeyError, TypeError, IndexError):
@@ -82,7 +86,7 @@ class DataPopulation(TypFieldIdentification, CatFiledIdentification):
             'pub': self.other_pub
         }
 
-        if others['secu'][0]['cd'].endswith('_QS_EQ'):
+        if others['secu'][0]['org']:
             others['stat'] = 2
         else:
             others['stat'] = 1
