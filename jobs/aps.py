@@ -9,6 +9,7 @@ from pymongo import MongoClient
 sys.path.append(dirname(dirname(abspath(__file__))))
 
 from jobs import app
+from jobs.clean import clean_replica
 from config import config_otc as _conf
 from annou_otc.annou import OtcAnnouncement
 from annou_otc.base import DataPopulation
@@ -43,6 +44,7 @@ def update_secu_fields():
 
 app.add_job(annou_jobs, trigger='cron', hour='9-23', minute='*/20')
 app.add_job(update_secu_fields, trigger='cron', hour='9-18', minute='*/30')
+app.add_job(clean_replica, trigger='cron', hour='9-18', minute='*/30')
 app.start()
 
 
