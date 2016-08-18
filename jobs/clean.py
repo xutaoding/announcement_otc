@@ -21,3 +21,7 @@ def clean_replica():
             coll.update({"_id": item["_id"]}, {'$set': {'stat': 0, 'upt': datetime.now()}})
         urls.add(sid_md5)
     client.close()
+
+
+if __name__ == '__main__':
+    clean_replica()
