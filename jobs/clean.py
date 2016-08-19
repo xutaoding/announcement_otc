@@ -1,7 +1,11 @@
 # coding=UTF-8
 # author: shuqing.zhou
-from datetime import datetime
+import sys
+from os.path import dirname, abspath
+from datetime import datetime, date
 from pymongo import MongoClient
+
+sys.path.append(dirname(dirname(abspath(__file__))))
 
 from config.config_otc import *
 from eggs.utils.utils import md5
@@ -13,7 +17,7 @@ def clean_replica():
 
     urls = set()
     fields = {"sid": 1}
-    query = {"sid": {"$regex": "http"}}
+    query = {"sid": {"$regex": "http"}, 'pub': str(date.today())}
     for item in coll.find(query, fields):
         sid_md5 = md5(item["sid"])
 
