@@ -3,7 +3,7 @@ from os.path import dirname, abspath
 
 from apscheduler.jobstores.sqlalchemy import SQLAlchemyJobStore
 from apscheduler.schedulers.blocking import BlockingScheduler
-from apscheduler.executors.pool import ProcessPoolExecutor
+from apscheduler.executors.pool import ProcessPoolExecutor, ThreadPoolExecutor
 
 
 def create_sqlite():
@@ -21,8 +21,8 @@ jobstores = {
 
 # using ThreadPoolExecutor as default other than ProcessPoolExecutor(not work) to executors
 executors = {
-    # 'default': ThreadPoolExecutor(4),
-    'default': ProcessPoolExecutor(4),
+    'default': ThreadPoolExecutor(4),
+    # 'default': ProcessPoolExecutor(4),
 }
 
 job_defaults = {
