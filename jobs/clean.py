@@ -14,6 +14,7 @@ from eggs.utils.utils import md5
 def clean_replica(days=0):
     client = MongoClient(DATA_HOST)
     coll = client[DB_OTC][TABLE_OTC]
+    print('Clean replica data start!')
 
     urls = set()
     fields = {"sid": 1}
@@ -25,6 +26,7 @@ def clean_replica(days=0):
             coll.update({"_id": item["_id"]}, {'$set': {'stat': 0, 'upt': datetime.now()}})
         urls.add(sid_md5)
     client.close()
+    print('Clean replica data end!')
 
 
 if __name__ == '__main__':
