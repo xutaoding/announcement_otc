@@ -13,14 +13,19 @@ from jobs.clean import clean_replica
 from config import config_otc as _conf
 from annou_otc.annou import OtcAnnouncement
 from annou_otc.base import DataPopulation
+from eggs.utils.log import logger
 
 
 def annou_jobs():
+    logger.info('Start Crawler OTC from Mongo!')
     OtcAnnouncement(1).extract()
     OtcAnnouncement(0).extract()
+    logger.info('End Crawler OTC from Mongo!')
 
 
 def update_secu_fields():
+    logger.info('Start Update record from Mongo <{} {} {}>!'.format(_conf.DATA_HOST, _conf.DB_OTC, _conf.TABLE_OTC))
+
     db = MongoClient(_conf.DATA_HOST, _conf.PORT)
     collection = db[_conf.DB_OTC][_conf.TABLE_OTC]
 
@@ -41,6 +46,7 @@ def update_secu_fields():
                     document={'$set': {'stat': 2, 'upt': datetime.now(), 'secu': new_secu}}
                 )
     db.close()
+    logger.info('End Update record from Mongo <{} {} {}>!'.format(_conf.DATA_HOST, _conf.DB_OTC, _conf.TABLE_OTC))
 
 app.add_job(annou_jobs, trigger='cron', hour='9-23', minute='*/20')
 app.add_job(update_secu_fields, trigger='cron', hour='9-18', minute='*/30')
