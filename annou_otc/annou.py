@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 
 import re
 import urllib
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 
 import simplejson
 
@@ -34,7 +34,8 @@ class OtcAnnouncement(BaseDownload):
             raise ValueError('Arguments error.')
 
         if start_date is None and end_date is None:
-            self._start_date = self._end_date = str(date.today())
+            self._start_date = str(date.today() - timedelta(days=1))
+            self._end_date = str(date.today())
         else:
             self._start_date = start_date
             self._end_date = end_date
