@@ -8,9 +8,11 @@
 程序运行
 ----
 1:执行脚本：announcement_otc/jobs/aps.py
+
 2:根据计划准备放在122.144.134.3:/opt/scrapyer/announcement_otc下运行
+
 3:使用screen命令， 是程序在后台工作， 运行：python run_otc.py
     
 备注
 ------
-目前程序已部署和运行
+目前程序已部署和运行， 具体问题以代码为准
