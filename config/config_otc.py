@@ -37,10 +37,10 @@ STOCK_TABLE = 'base_stock'
 
 ROOT_PATH = join(dirname(dirname(abspath(__file__))), 'files').replace('\\', '/') + '/'
 
-AWS_HOST = 's3.cn-north-1.amazonaws.com.cn'
-BUCKET_NAME = 'cn.com.chinascope.dfs'
-AWS_ACCESS_KEY_ID = 'AKIAPY6JJ76F67VDOGBA'
-AWS_SECRET_ACCESS_KEY = 'VDW2yIQR453LL3tQ0VYNZBvH2NLBa9w2/YKsdJOP'
+AWS_HOST = ''
+BUCKET_NAME = ''
+AWS_ACCESS_KEY_ID = ''
+AWS_SECRET_ACCESS_KEY = ''
 
 ROOT_AWS_KEY = 'announce/otc/'
 
